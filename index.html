@@ -3,763 +3,221 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Найти работу легко! + Кликер Дани</title>
+    <title>Найти работу легко!</title>
     <style>
-        /* ===== ОБЩИЕ СТИЛИ (без изменений) ===== */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', system-ui, sans-serif;
-        }
-        body {
-            background: linear-gradient(145deg, #0f0c29, #302b63, #24243e);
-            min-height: 100vh;
-            overflow-x: hidden;
-            color: #fff;
-            padding: 20px;
-        }
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-        .stars {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 0;
-        }
-        .star {
-            position: absolute;
-            background: #fff;
-            border-radius: 50%;
-            animation: twinkle 2s infinite alternate;
-        }
-        @keyframes twinkle {
-            0% { opacity: 0.2; }
-            100% { opacity: 1; }
-        }
-        .page {
-            display: none;
-            position: relative;
-            z-index: 1;
-        }
-        .page.active {
-            display: block;
-        }
-
-        /* ===== ГЛАВНАЯ СТРАНИЦА (все стили без изменений) ===== */
-        .hero {
-            text-align: center;
-            padding: 50px 20px 10px;
-            min-height: 280px;
-        }
-        .word-container {
-            position: relative;
-            min-height: 180px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-        }
-        .falling-word {
-            position: absolute;
-            font-size: 70px;
-            font-weight: 900;
-            opacity: 0;
-            animation: fallDown 2.5s ease-out forwards;
-            text-shadow: 0 0 30px rgba(255, 215, 0, 0.6);
-            letter-spacing: 4px;
-            text-transform: uppercase;
-        }
-        @keyframes fallDown {
-            0% {
-                opacity: 0;
-                transform: translateY(-100px) scale(0.8) rotate(-5deg);
-            }
-            30% {
-                opacity: 1;
-                transform: translateY(30px) scale(1.1) rotate(2deg);
-            }
-            60% {
-                transform: translateY(-10px) scale(0.95) rotate(-1deg);
-            }
-            80% {
-                transform: translateY(5px) scale(1) rotate(0deg);
-            }
-            100% {
-                opacity: 1;
-                transform: translateY(0) scale(1) rotate(0deg);
-                box-shadow: 0 0 40px rgba(255, 215, 0, 0.3);
-            }
-        }
-        .word-container .static-word {
-            font-size: 70px;
-            font-weight: 900;
-            color: #ffd700;
-            text-shadow: 0 0 40px rgba(255, 215, 0, 0.5);
-            letter-spacing: 6px;
-            display: inline-block;
-            margin: 0 10px;
-        }
-        .word-container .static-word.easy {
-            color: #ff6b6b;
-            text-shadow: 0 0 40px rgba(255, 107, 107, 0.6), 0 0 80px rgba(255, 107, 107, 0.3);
-            font-size: 85px;
-            animation: pulseEasy 2s infinite alternate;
-        }
-        @keyframes pulseEasy {
-            0% { transform: scale(1); }
-            100% { transform: scale(1.08); }
-        }
-        .slogan-line {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            align-items: center;
-            gap: 8px;
-        }
-        .hero .sub {
-            color: #aaa;
-            font-size: 18px;
-            margin-top: 12px;
-            letter-spacing: 2px;
-        }
-        .hero .question {
-            color: #ffd700;
-            font-size: 20px;
-            margin-top: 6px;
-            opacity: 0.9;
-            letter-spacing: 1px;
-        }
-        .tips-title {
-            text-align: center;
-            font-size: 38px;
-            margin: 30px 0 30px;
-            color: #ffd700;
-            text-shadow: 0 0 30px rgba(255, 215, 0, 0.15);
-            letter-spacing: 2px;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', system-ui, sans-serif; }
+        body { background: linear-gradient(145deg, #0f0c29, #302b63, #24243e); min-height: 100vh; color: #fff; padding: 20px; }
+        .container { max-width: 1200px; margin: 0 auto; }
+        .stars { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; }
+        .star { position: absolute; background: #fff; border-radius: 50%; animation: twinkle 2s infinite alternate; }
+        @keyframes twinkle { 0% { opacity: 0.2; } 100% { opacity: 1; } }
+        .page { display: none; position: relative; z-index: 1; }
+        .page.active { display: block; }
+        .hero { text-align: center; padding: 50px 20px 10px; min-height: 280px; }
+        .word-container { position: relative; min-height: 180px; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+        .falling-word { position: absolute; font-size: 70px; font-weight: 900; opacity: 0; animation: fallDown 2.5s ease-out forwards; text-shadow: 0 0 30px rgba(255,215,0,0.6); letter-spacing: 4px; text-transform: uppercase; }
+        @keyframes fallDown { 0% { opacity: 0; transform: translateY(-100px) scale(0.8) rotate(-5deg); } 30% { opacity: 1; transform: translateY(30px) scale(1.1) rotate(2deg); } 60% { transform: translateY(-10px) scale(0.95) rotate(-1deg); } 80% { transform: translateY(5px) scale(1) rotate(0deg); } 100% { opacity: 1; transform: translateY(0) scale(1) rotate(0deg); box-shadow: 0 0 40px rgba(255,215,0,0.3); } }
+        .word-container .static-word { font-size: 70px; font-weight: 900; color: #ffd700; text-shadow: 0 0 40px rgba(255,215,0,0.5); letter-spacing: 6px; display: inline-block; margin: 0 10px; }
+        .word-container .static-word.easy { color: #ff6b6b; text-shadow: 0 0 40px rgba(255,107,107,0.6), 0 0 80px rgba(255,107,107,0.3); font-size: 85px; animation: pulseEasy 2s infinite alternate; }
+        @keyframes pulseEasy { 0% { transform: scale(1); } 100% { transform: scale(1.08); } }
+        .slogan-line { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 8px; }
+        .hero .sub { color: #aaa; font-size: 18px; margin-top: 12px; letter-spacing: 2px; }
+        .hero .question { color: #ffd700; font-size: 20px; margin-top: 6px; opacity: 0.9; letter-spacing: 1px; }
+        .tips-title { text-align: center; font-size: 38px; margin: 30px 0 30px; color: #ffd700; text-shadow: 0 0 30px rgba(255,215,0,0.15); letter-spacing: 2px; }
         .tips-title span { color: #ff6b6b; }
-        .cards-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 25px;
-            margin-bottom: 30px;
-        }
-        .card {
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 24px;
-            padding: 28px 22px;
-            backdrop-filter: blur(4px);
-            border: 1px solid rgba(255, 255, 255, 0.06);
-            transition: 0.3s;
-            cursor: pointer;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
-        }
-        .card:hover {
-            transform: translateY(-6px);
-            background: rgba(255, 255, 255, 0.10);
-            border-color: #ffd700;
-            box-shadow: 0 12px 48px rgba(255, 215, 0, 0.12);
-        }
+        .cards-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 25px; margin-bottom: 30px; }
+        .card { background: rgba(255,255,255,0.05); border-radius: 24px; padding: 28px 22px; backdrop-filter: blur(4px); border: 1px solid rgba(255,255,255,0.06); transition: 0.3s; cursor: pointer; box-shadow: 0 8px 32px rgba(0,0,0,0.2); }
+        .card:hover { transform: translateY(-6px); background: rgba(255,255,255,0.10); border-color: #ffd700; box-shadow: 0 12px 48px rgba(255,215,0,0.12); }
         .card .icon { font-size: 44px; margin-bottom: 10px; }
-        .card h3 {
-            font-size: 22px;
-            color: #ffd700;
-            margin-bottom: 8px;
-        }
-        .card .preview {
-            color: #bbb;
-            font-size: 15px;
-            line-height: 1.5;
-        }
-        .card .expand {
-            display: none;
-            margin-top: 16px;
-            padding-top: 16px;
-            border-top: 1px solid rgba(255, 255, 255, 0.08);
-            color: #ddd;
-            font-size: 15px;
-            line-height: 1.7;
-        }
-        .card .expand ul {
-            list-style: none;
-            padding: 0;
-            margin-top: 10px;
-        }
-        .card .expand ul li {
-            padding: 6px 0;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.04);
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        .card .expand ul li::before {
-            content: "⭐";
-            font-size: 14px;
-        }
-        .card .expand .btn-close {
-            display: inline-block;
-            margin-top: 12px;
-            padding: 6px 18px;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 30px;
-            font-size: 13px;
-            cursor: pointer;
-            transition: 0.2s;
-            border: 1px solid rgba(255, 255, 255, 0.05);
-        }
-        .card .expand .btn-close:hover {
-            background: rgba(255, 255, 255, 0.2);
-        }
-        .card.active .expand {
-            display: block;
-        }
-        .card.active {
-            background: rgba(255, 215, 0, 0.06);
-            border-color: #ffd700;
-        }
-        .inspire-btn {
-            display: block;
-            margin: 20px auto 10px;
-            padding: 16px 40px;
-            background: linear-gradient(145deg, #ffd700, #f0a500);
-            border: none;
-            border-radius: 60px;
-            color: #1a1a2e;
-            font-size: 20px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: 0.3s;
-            box-shadow: 0 8px 32px rgba(255, 215, 0, 0.2);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-        }
-        .inspire-btn:hover {
-            transform: scale(1.04);
-            box-shadow: 0 12px 48px rgba(255, 215, 0, 0.35);
-        }
-        .inspire-text {
-            text-align: center;
-            font-size: 18px;
-            color: #ffd700;
-            min-height: 50px;
-            margin-top: 10px;
-        }
-        .clicker-btn {
-            display: block;
-            margin: 30px auto 20px;
-            padding: 18px 50px;
-            background: linear-gradient(145deg, #ff6b6b, #ee5a24);
-            border: none;
-            border-radius: 60px;
-            color: #fff;
-            font-size: 24px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: 0.3s;
-            box-shadow: 0 8px 32px rgba(255, 107, 107, 0.3);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-        }
-        .clicker-btn:hover {
-            transform: scale(1.05);
-            box-shadow: 0 12px 48px rgba(255, 107, 107, 0.5);
-        }
-        .footer {
-            text-align: center;
-            padding: 30px 20px 10px;
-            color: #777;
-            font-size: 14px;
-            border-top: 1px solid rgba(255, 255, 255, 0.05);
-            margin-top: 20px;
-        }
+        .card h3 { font-size: 22px; color: #ffd700; margin-bottom: 8px; }
+        .card .preview { color: #bbb; font-size: 15px; line-height: 1.5; }
+        .card .expand { display: none; margin-top: 16px; padding-top: 16px; border-top: 1px solid rgba(255,255,255,0.08); color: #ddd; font-size: 15px; line-height: 1.7; }
+        .card .expand ul { list-style: none; padding: 0; margin-top: 10px; }
+        .card .expand ul li { padding: 6px 0; border-bottom: 1px solid rgba(255,255,255,0.04); display: flex; align-items: center; gap: 10px; }
+        .card .expand ul li::before { content: "⭐"; font-size: 14px; }
+        .card .expand .btn-close { display: inline-block; margin-top: 12px; padding: 6px 18px; background: rgba(255,255,255,0.1); border-radius: 30px; font-size: 13px; cursor: pointer; transition: 0.2s; border: 1px solid rgba(255,255,255,0.05); }
+        .card .expand .btn-close:hover { background: rgba(255,255,255,0.2); }
+        .card.active .expand { display: block; }
+        .card.active { background: rgba(255,215,0,0.06); border-color: #ffd700; }
+        .inspire-btn { display: block; margin: 20px auto 10px; padding: 16px 40px; background: linear-gradient(145deg, #ffd700, #f0a500); border: none; border-radius: 60px; color: #1a1a2e; font-size: 20px; font-weight: bold; cursor: pointer; transition: 0.3s; box-shadow: 0 8px 32px rgba(255,215,0,0.2); border: 1px solid rgba(255,255,255,0.2); }
+        .inspire-btn:hover { transform: scale(1.04); box-shadow: 0 12px 48px rgba(255,215,0,0.35); }
+        .inspire-text { text-align: center; font-size: 18px; color: #ffd700; min-height: 50px; margin-top: 10px; }
+        .clicker-btn { display: block; margin: 30px auto 20px; padding: 18px 50px; background: linear-gradient(145deg, #ff6b6b, #ee5a24); border: none; border-radius: 60px; color: #fff; font-size: 24px; font-weight: bold; cursor: pointer; transition: 0.3s; box-shadow: 0 8px 32px rgba(255,107,107,0.3); border: 1px solid rgba(255,255,255,0.2); }
+        .clicker-btn:hover { transform: scale(1.05); box-shadow: 0 12px 48px rgba(255,107,107,0.5); }
+        .footer { text-align: center; padding: 30px 20px 10px; color: #777; font-size: 14px; border-top: 1px solid rgba(255,255,255,0.05); margin-top: 20px; }
         .footer strong { color: #ffd700; }
-
-        /* ===== СТРАНИЦА КЛИКЕРА (ОБНОВЛЁННАЯ) ===== */
-        .clicker-page {
-            text-align: center;
-            padding: 30px 20px;
-        }
-        .clicker-page h1 {
-            font-size: 40px;
-            color: #ffd700;
-            text-shadow: 0 0 30px rgba(255, 215, 0, 0.3);
-            margin-bottom: 10px;
-        }
-        .clicker-page .balance {
-            font-size: 32px;
-            color: #fff;
-            background: rgba(0, 0, 0, 0.3);
-            padding: 10px 30px;
-            border-radius: 60px;
-            display: inline-block;
-            margin-bottom: 20px;
-            border: 1px solid rgba(255, 215, 0, 0.2);
-        }
-        .clicker-page .balance span {
-            color: #ffd700;
-            font-weight: bold;
-        }
-        .clicker-page .click-wrapper {
-            position: relative;
-            display: inline-block;
-            margin: 10px 0;
-        }
-        .clicker-page .click-image {
-            width: 220px;
-            height: 220px;
-            border-radius: 50%;
-            object-fit: cover;
-            cursor: pointer;
-            transition: 0.08s;
-            box-shadow: 0 0 40px rgba(255, 215, 0, 0.15);
-            border: 3px solid rgba(255, 215, 0, 0.2);
-        }
-        .clicker-page .click-image:active {
-            transform: scale(0.88);
-        }
-        /* Анимация монетки +1 */
-        .coin-popup {
-            position: absolute;
-            font-size: 32px;
-            font-weight: 900;
-            color: #ffd700;
-            text-shadow: 0 0 20px #ffd700, 0 0 40px #ff8800;
-            pointer-events: none;
-            animation: coinFly 0.8s ease-out forwards;
-            z-index: 10;
-        }
-        @keyframes coinFly {
-            0% {
-                opacity: 1;
-                transform: translate(0, 0) scale(0.5) rotate(0deg);
-            }
-            50% {
-                opacity: 1;
-                transform: translate(var(--fx), var(--fy)) scale(1.5) rotate(20deg);
-            }
-            100% {
-                opacity: 0;
-                transform: translate(var(--fx2), var(--fy2)) scale(1.8) rotate(40deg);
-            }
-        }
-        .clicker-page .back-btn {
-            display: inline-block;
-            margin-top: 30px;
-            padding: 12px 30px;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 60px;
-            color: #fff;
-            font-size: 18px;
-            cursor: pointer;
-            transition: 0.3s;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-        .clicker-page .back-btn:hover {
-            background: rgba(255, 255, 255, 0.2);
-        }
-        .clicker-page .click-counter {
-            font-size: 18px;
-            color: #aaa;
-            margin-top: 10px;
-        }
-
-        @media (max-width: 600px) {
-            .falling-word { font-size: 40px; }
-            .word-container .static-word { font-size: 40px; }
-            .word-container .static-word.easy { font-size: 50px; }
-            .tips-title { font-size: 28px; }
-            .cards-grid { grid-template-columns: 1fr; }
-            .clicker-page h1 { font-size: 28px; }
-            .clicker-page .balance { font-size: 24px; }
-            .clicker-page .click-image {
-                width: 160px;
-                height: 160px;
-            }
-        }
+        .qr-section { text-align: center; margin-top: 40px; padding: 20px 0; border-top: 1px solid rgba(255,255,255,0.05); }
+        .qr-section h3 { color: #ffd700; font-size: 22px; margin-bottom: 10px; }
+        .qr-section img { border-radius: 16px; border: 2px solid rgba(255,215,0,0.2); box-shadow: 0 0 30px rgba(255,215,0,0.1); background: #fff; padding: 8px; }
+        .qr-section p { color: #aaa; font-size: 15px; margin-top: 8px; }
+        .clicker-page { text-align: center; padding: 30px 20px; }
+        .clicker-page h1 { font-size: 40px; color: #ffd700; text-shadow: 0 0 30px rgba(255,215,0,0.3); margin-bottom: 10px; }
+        .clicker-page .balance { font-size: 32px; color: #fff; background: rgba(0,0,0,0.3); padding: 10px 30px; border-radius: 60px; display: inline-block; margin-bottom: 20px; border: 1px solid rgba(255,215,0,0.2); }
+        .clicker-page .balance span { color: #ffd700; font-weight: bold; }
+        .clicker-page .click-wrapper { position: relative; display: inline-block; margin: 10px 0; }
+        .clicker-page .click-image { width: 220px; height: 220px; border-radius: 50%; object-fit: cover; cursor: pointer; transition: 0.08s; box-shadow: 0 0 40px rgba(255,215,0,0.15); border: 3px solid rgba(255,215,0,0.2); }
+        .clicker-page .click-image:active { transform: scale(0.88); }
+        .coin-popup { position: absolute; font-size: 32px; font-weight: 900; color: #ffd700; text-shadow: 0 0 20px #ffd700, 0 0 40px #ff8800; pointer-events: none; animation: coinFly 0.8s ease-out forwards; z-index: 10; }
+        @keyframes coinFly { 0% { opacity: 1; transform: translate(0,0) scale(0.5) rotate(0deg); } 50% { opacity: 1; transform: translate(var(--fx), var(--fy)) scale(1.5) rotate(20deg); } 100% { opacity: 0; transform: translate(var(--fx2), var(--fy2)) scale(1.8) rotate(40deg); } }
+        .clicker-page .back-btn { display: inline-block; margin-top: 30px; padding: 12px 30px; background: rgba(255,255,255,0.1); border-radius: 60px; color: #fff; font-size: 18px; cursor: pointer; transition: 0.3s; border: 1px solid rgba(255,255,255,0.1); }
+        .clicker-page .back-btn:hover { background: rgba(255,255,255,0.2); }
+        .clicker-page .click-counter { font-size: 18px; color: #aaa; margin-top: 10px; }
+        @media (max-width:600px) { .falling-word { font-size: 40px; } .word-container .static-word { font-size: 40px; } .word-container .static-word.easy { font-size: 50px; } .tips-title { font-size: 28px; } .cards-grid { grid-template-columns: 1fr; } .clicker-page h1 { font-size: 28px; } .clicker-page .balance { font-size: 24px; } .clicker-page .click-image { width: 160px; height: 160px; } }
     </style>
 </head>
 <body>
-
-    <div class="container">
-        <!-- ===== ЗВЁЗДЫ ===== -->
-        <div class="stars" id="stars"></div>
-
-        <!-- ========================================================= -->
-        <!--  СТРАНИЦА 1: ГЛАВНАЯ (СОВЕТЫ) -->
-        <!-- ========================================================= -->
-        <div class="page active" id="mainPage">
-            <div class="hero">
-                <div class="word-container" id="wordContainer"></div>
-                <div class="sub" id="subText"></div>
-                <div class="question">💭 Хочешь свои деньги, но в резюме нечего писать?</div>
-            </div>
-
-            <h2 class="tips-title">💡 <span>Советы</span> для первых шагов</h2>
-
-            <div class="cards-grid" id="cardsGrid">
-                <!-- ===== КАРТОЧКИ (11 штук) ===== -->
-                <div class="card">
-                    <div class="icon">🧠</div>
-                    <h3>Подумай, что ты умеешь</h3>
-                    <div class="preview">Напиши список своих навыков: рисование, помощь с техникой, уход за животными...</div>
-                    <div class="expand">
-                        <p>Твои хобби — это уже твой стартовый капитал. Если ты любишь рисовать — предложи создавать открытки или иллюстрации. Если разбираешься в технике — помогай соседям с настройкой. Даже обычное общение — это навык!</p>
-                        <ul>
-                            <li>Запиши всё, что умеешь делать</li>
-                            <li>Спроси у родителей, что они ценят в тебе</li>
-                            <li>Подумай, что тебе нравится делать</li>
-                        </ul>
-                        <div class="btn-close" onclick="closeCard(this)">✕ Свернуть</div>
-                    </div>
-                </div>
-
-                <div class="card">
-                    <div class="icon">📋</div>
-                    <h3>Составь резюме</h3>
-                    <div class="preview">Коротко и ярко напиши о себе, своих сильных сторонах и опыте.</div>
-                    <div class="expand">
-                        <p>Резюме — это твоя визитка. Напиши: имя, возраст, контакты родителей, свои навыки и примеры дел. Можно добавить фразу: «Готов учиться и пробовать новое».</p>
-                        <ul>
-                            <li>Укажи свои лучшие качества</li>
-                            <li>Добавь контакты родителей</li>
-                            <li>Попроси помочь с оформлением</li>
-                        </ul>
-                        <div class="btn-close" onclick="closeCard(this)">✕ Свернуть</div>
-                    </div>
-                </div>
-
-                <div class="card">
-                    <div class="icon">🔍</div>
-                    <h3>Где искать работу?</h3>
-                    <div class="preview">Поговори с соседями, учителями, родителями друзей.</div>
-                    <div class="expand">
-                        <p>Не стесняйся спрашивать! Расскажи друзьям, что ищешь работу — они могут знать кого-то, кому нужна помощь. Повесь объявление в подъезде или в соцсетях (с разрешения родителей).</p>
-                        <ul>
-                            <li>Спроси в местных магазинах</li>
-                            <li>Поищи объявления на досках</li>
-                            <li>Не бойся предлагать помощь</li>
-                        </ul>
-                        <div class="btn-close" onclick="closeCard(this)">✕ Свернуть</div>
-                    </div>
-                </div>
-
-                <div class="card">
-                    <div class="icon">💪</div>
-                    <h3>Как не бояться отказа</h3>
-                    <div class="preview">Отказы — это нормально. Каждый раз ты становишься сильнее.</div>
-                    <div class="expand">
-                        <p>Отказ — это не «ты плохой», а «не подошёл сейчас». Из каждого отказа можно вынести урок: может, нужно изменить подход или попробовать другое место.</p>
-                        <ul>
-                            <li>Отказ — не провал, а опыт</li>
-                            <li>Продолжай пытаться</li>
-                            <li>Каждый раз ты ближе к цели</li>
-                        </ul>
-                        <div class="btn-close" onclick="closeCard(this)">✕ Свернуть</div>
-                    </div>
-                </div>
-
-                <div class="card">
-                    <div class="icon">🎯</div>
-                    <h3>Первые шаги</h3>
-                    <div class="preview">Начни с малого: помоги соседям, предложи свои услуги.</div>
-                    <div class="expand">
-                        <p>Иногда самый сложный шаг — начать. Напиши список людей, которые могут тебе помочь. Скажи им: «Я ищу работу, могу быть полезен». Простое «я могу помочь» — уже открывает двери.</p>
-                        <ul>
-                            <li>Сделай пост в соцсетях</li>
-                            <li>Предложи услуги во дворе</li>
-                            <li>Спроси у старших знакомых</li>
-                        </ul>
-                        <div class="btn-close" onclick="closeCard(this)">✕ Свернуть</div>
-                    </div>
-                </div>
-
-                <div class="card">
-                    <div class="icon">🔥</div>
-                    <h3>Твоя идея — твой старт</h3>
-                    <div class="preview">Придумай что-то своё: выгул собак, полив цветов, доставка.</div>
-                    <div class="expand">
-                        <p>У тебя есть уникальная идея? Напиши её на бумаге и подумай, как её воплотить. Даже маленькое дело может вырасти в нечто большое.</p>
-                        <ul>
-                            <li>Придумай своё дело</li>
-                            <li>Спроси родителей о поддержке</li>
-                            <li>Попробуй — это интересно!</li>
-                        </ul>
-                        <div class="btn-close" onclick="closeCard(this)">✕ Свернуть</div>
-                    </div>
-                </div>
-
-                <div class="card">
-                    <div class="icon">🤝</div>
-                    <h3>Помощь другим — хороший старт</h3>
-                    <div class="preview">Помогай пожилым людям, присматривай за детьми, ухаживай за растениями.</div>
-                    <div class="expand">
-                        <p>Многие люди ищут помощь по дому, с детьми или с питомцами. Твоя помощь может быть неоценимой. Просто спроси: «Чем я могу помочь?»</p>
-                        <ul>
-                            <li>Помоги соседям с покупками</li>
-                            <li>Предложи присмотреть за животными</li>
-                            <li>Ухаживай за садом или огородом</li>
-                        </ul>
-                        <div class="btn-close" onclick="closeCard(this)">✕ Свернуть</div>
-                    </div>
-                </div>
-
-                <div class="card">
-                    <div class="icon">🧘</div>
-                    <h3>Не бойся просить помощи</h3>
-                    <div class="preview">Родители, учителя, старшие друзья — они могут помочь.</div>
-                    <div class="expand">
-                        <p>Ты не обязан делать всё один. Расскажи о своём желании работать взрослым — они могут знать о вакансиях или дать полезные контакты. Просто скажи: «Я хочу попробовать, помогите мне начать».</p>
-                        <ul>
-                            <li>Поговори с родителями</li>
-                            <li>Спроси учителей</li>
-                            <li>Обратись к старшим друзьям</li>
-                        </ul>
-                        <div class="btn-close" onclick="closeCard(this)">✕ Свернуть</div>
-                    </div>
-                </div>
-
-                <div class="card">
-                    <div class="icon">🚫</div>
-                    <h3>Чего НЕ делать в резюме</h3>
-                    <div class="preview">Ошибки, которые могут испортить первое впечатление о тебе.</div>
-                    <div class="expand">
-                        <p>Даже если у тебя мало опыта, важно избегать этих ошибок. Не ври о своих навыках — это быстро раскроется. Не пиши слишком много лишнего, будь краток. Не используй сложные слова, если не уверен в их значении.</p>
-                        <ul>
-                            <li>Не пиши: «Я ничего не умею»</li>
-                            <li>Не используй шаблоны из интернета</li>
-                            <li>Не указывай ложные контакты</li>
-                            <li>Не делай резюме слишком длинным</li>
-                        </ul>
-                        <div class="btn-close" onclick="closeCard(this)">✕ Свернуть</div>
-                    </div>
-                </div>
-
-                <div class="card">
-                    <div class="icon">✏️</div>
-                    <h3>Как сделать резюме интересным</h3>
-                    <div class="preview">Добавь немного изюминки, чтобы тебя заметили.</div>
-                    <div class="expand">
-                        <p>Расскажи о своих увлечениях, которые могут быть полезны. Если ты любишь читать — ты умеешь работать с информацией. Если любишь спорт — ты дисциплинирован. Пиши позитивно и с энергией.</p>
-                        <ul>
-                            <li>Добавь фразу: «Люблю узнавать новое»</li>
-                            <li>Напиши о своих достижениях</li>
-                            <li>Укажи, что готов помогать</li>
-                            <li>Используй яркие, но честные слова</li>
-                        </ul>
-                        <div class="btn-close" onclick="closeCard(this)">✕ Свернуть</div>
-                    </div>
-                </div>
-
-                <div class="card">
-                    <div class="icon">⏳</div>
-                    <h3>Что делать, если никто не отвечает</h3>
-                    <div class="preview">Не сдавайся — есть способы повысить свои шансы.</div>
-                    <div class="expand">
-                        <p>Если на твои предложения не отвечают, попробуй изменить подход. Напиши ещё раз, но добавь что-то новое. Попроси родителей помочь с текстом. Предложи свою помощь бесплатно на пробу — это может привести к оплате.</p>
-                        <ul>
-                            <li>Проверь, правильно ли ты написал контакты</li>
-                            <li>Спроси у родителей, как улучшить текст</li>
-                            <li>Попробуй найти работу через знакомых</li>
-                            <li>Не останавливайся после первых отказов</li>
-                        </ul>
-                        <div class="btn-close" onclick="closeCard(this)">✕ Свернуть</div>
-                    </div>
-                </div>
-            </div>
-
-            <button class="inspire-btn" onclick="showInspire()">✨ Получить вдохновение</button>
-            <div class="inspire-text" id="inspireText"></div>
-
-            <!-- ===== КНОПКА ПЕРЕХОДА В КЛИКЕР ===== -->
-            <button class="clicker-btn" onclick="showClicker()">🖱️ КЛИКЕР ДАНИ</button>
-
-            <div class="footer">
-                🌟 <strong>Найти работу легко</strong> — ты можешь начать уже сегодня!<br>
-                Сделано с ❤️ для подростков, которые не боятся пробовать.
-            </div>
-        </div>
-
-        <!-- ========================================================= -->
-        <!--  СТРАНИЦА 2: КЛИКЕР (ОБНОВЛЁННАЯ) -->
-        <!-- ========================================================= -->
-        <div class="page" id="clickerPage">
-            <div class="clicker-page">
-                <h1>🖱️ Кликер Дани</h1>
-                <div class="balance">💰 Монетки: <span id="coinBalance">0</span></div>
-
-                <div class="click-wrapper" id="clickWrapper">
-                    <img src="photo_2026-08-04_20-50-00.jpg" alt="Тапай меня" class="click-image" id="clickImage">
-                </div>
-
-                <div class="click-counter">👆 Нажми на картинку, чтобы заработать монетки</div>
-                <div class="back-btn" onclick="showMain()">← Вернуться к советам</div>
-            </div>
-            <div class="footer">
-                🌟 <strong>Кликер Дани</strong> — тапай и собирай монетки!
-            </div>
-        </div>
-    </div>
-
-    <script>
-        // ============================================================
-        //  1. ЗВЁЗДЫ
-        // ============================================================
-        const starsContainer = document.getElementById('stars');
-        for (let i = 0; i < 120; i++) {
-            const star = document.createElement('div');
-            star.className = 'star';
-            star.style.left = Math.random() * 100 + '%';
-            star.style.top = Math.random() * 100 + '%';
-            star.style.animationDelay = Math.random() * 3 + 's';
-            const size = 1 + Math.random() * 3;
-            star.style.width = size + 'px';
-            star.style.height = size + 'px';
-            starsContainer.appendChild(star);
-        }
-
-        // ============================================================
-        //  2. ПАДАЮЩИЕ СЛОВА
-        // ============================================================
-        const container = document.getElementById('wordContainer');
-        const words = [
-            { text: 'Найти', color: '#ffd700', delay: 0.2 },
-            { text: 'работу', color: '#ffd700', delay: 0.8 },
-            { text: 'легко', color: '#ff6b6b', delay: 1.4 },
-        ];
-
-        words.forEach((w) => {
-            const el = document.createElement('div');
-            el.className = 'falling-word';
-            el.textContent = w.text;
-            el.style.color = w.color;
-            el.style.animationDelay = w.delay + 's';
-            el.style.left = (20 + Math.random() * 60) + '%';
-            el.style.top = '-5%';
-            container.appendChild(el);
-        });
-
-        setTimeout(() => {
-            document.querySelectorAll('.falling-word').forEach(el => el.remove());
-            const line = document.createElement('div');
-            line.className = 'slogan-line';
-
-            const wordData = [
-                { text: 'Найти', color: '#ffd700' },
-                { text: 'работу', color: '#ffd700' },
-                { text: 'легко', color: '#ff6b6b', extra: 'easy' },
-            ];
-            wordData.forEach((w) => {
-                const span = document.createElement('span');
-                span.className = 'static-word' + (w.extra ? ' ' + w.extra : '');
-                span.textContent = w.text;
-                span.style.color = w.color;
-                line.appendChild(span);
-            });
-            container.appendChild(line);
-            document.getElementById('subText').textContent = '✨ Даже если тебе 11–13 лет ✨';
-        }, 3000);
-
-        // ============================================================
-        //  3. КАРТОЧКИ
-        // ============================================================
-        document.querySelectorAll('.card').forEach(card => {
-            card.addEventListener('click', function(e) {
-                if (e.target.classList.contains('btn-close')) return;
-                const isActive = this.classList.contains('active');
-                document.querySelectorAll('.card').forEach(c => c.classList.remove('active'));
-                if (!isActive) {
-                    this.classList.add('active');
-                }
-            });
-        });
-
-        function closeCard(btn) {
-            const card = btn.closest('.card');
-            if (card) card.classList.remove('active');
-        }
-
-        // ============================================================
-        //  4. ВДОХНОВЕНИЕ
-        // ============================================================
-        function showInspire() {
-            const texts = [
-                '🚀 Ты можешь больше, чем думаешь! Начни с малого — и ты удивишься.',
-                '💪 Каждый отказ — это шаг к успеху. Ты уже на правильном пути!',
-                '🌟 Твоя идея может изменить мир. А начать можно уже сегодня.',
-                '🔥 Не бойся пробовать новое. Даже если не получится — ты узнаешь, как сделать лучше.',
-                '🎯 У тебя есть всё, чтобы найти работу. Главное — верить в себя.',
-                '✨ Ты уникален. Твои навыки и таланты нужны людям!',
-                '💡 Иногда просто сказать "я могу" — это уже половина успеха.'
-            ];
-            const random = texts[Math.floor(Math.random() * texts.length)];
-            document.getElementById('inspireText').textContent = random;
-        }
-
-        // ============================================================
-        //  5. ПЕРЕКЛЮЧЕНИЕ СТРАНИЦ
-        // ============================================================
-        function showClicker() {
-            document.getElementById('mainPage').classList.remove('active');
-            document.getElementById('clickerPage').classList.add('active');
-        }
-
-        function showMain() {
-            document.getElementById('clickerPage').classList.remove('active');
-            document.getElementById('mainPage').classList.add('active');
-        }
-
-        // ============================================================
-        //  6. КЛИКЕР (С АНИМАЦИЕЙ МОНЕТКИ)
-        // ============================================================
-        let coins = 0;
-        const coinBalance = document.getElementById('coinBalance');
-        const clickImage = document.getElementById('clickImage');
-        const clickWrapper = document.getElementById('clickWrapper');
-
-        clickImage.addEventListener('click', function(e) {
-            // +1 монетка
-            coins++;
-            coinBalance.textContent = coins;
-
-            // Анимация картинки (уменьшение)
-            this.style.transform = 'scale(0.88)';
-            setTimeout(() => {
-                this.style.transform = 'scale(1)';
-            }, 120);
-
-            // === АНИМАЦИЯ МОНЕТКИ "+1" ===
-            const popup = document.createElement('div');
-            popup.className = 'coin-popup';
-            popup.textContent = '+1 🪙';
-
-            // Случайное смещение вверх-вправо
-            const offsetX = -30 + Math.random() * 70;
-            const offsetY = -80 + Math.random() * 30;
-            const offsetX2 = -50 + Math.random() * 100;
-            const offsetY2 = -150 + Math.random() * 40;
-
-            popup.style.setProperty('--fx', offsetX + 'px');
-            popup.style.setProperty('--fy', offsetY + 'px');
-            popup.style.setProperty('--fx2', offsetX2 + 'px');
-            popup.style.setProperty('--fy2', offsetY2 + 'px');
-
-            // Позиционируем над картинкой
-            const rect = this.getBoundingClientRect();
-            popup.style.left = (rect.left + rect.width / 2 - 20) + 'px';
-            popup.style.top = (rect.top - 10) + 'px';
-            popup.style.position = 'fixed';
-
-            document.body.appendChild(popup);
-
-            // Удаляем через 1 сек
-            setTimeout(() => {
-                popup.remove();
-            }, 900);
-        });
-    </script>
+<div class="container">
+<div class="stars" id="stars"></div>
+<div class="page active" id="mainPage">
+<div class="hero">
+<div class="word-container" id="wordContainer"></div>
+<div class="sub" id="subText"></div>
+<div class="question">💭 Хочешь свои деньги, но в резюме нечего писать?</div>
+</div>
+<h2 class="tips-title">💡 <span>Советы</span> для первых шагов</h2>
+<div class="cards-grid">
+<div class="card"><div class="icon">🧠</div><h3>Подумай, что ты умеешь</h3><div class="preview">Напиши список своих навыков: рисование, помощь с техникой, уход за животными...</div><div class="expand"><p>Твои хобби — это уже твой стартовый капитал.</p><ul><li>Запиши всё, что умеешь делать</li><li>Спроси у родителей, что они ценят в тебе</li><li>Подумай, что тебе нравится делать</li></ul><div class="btn-close" onclick="closeCard(this)">✕ Свернуть</div></div></div>
+<div class="card"><div class="icon">📋</div><h3>Составь резюме</h3><div class="preview">Коротко и ярко напиши о себе, своих сильных сторонах и опыте.</div><div class="expand"><p>Резюме — это твоя визитка.</p><ul><li>Укажи свои лучшие качества</li><li>Добавь контакты родителей</li><li>Попроси помочь с оформлением</li></ul><div class="btn-close" onclick="closeCard(this)">✕ Свернуть</div></div></div>
+<div class="card"><div class="icon">🔍</div><h3>Где искать работу?</h3><div class="preview">Поговори с соседями, учителями, родителями друзей.</div><div class="expand"><p>Не стесняйся спрашивать!</p><ul><li>Спроси в местных магазинах</li><li>Поищи объявления на досках</li><li>Не бойся предлагать помощь</li></ul><div class="btn-close" onclick="closeCard(this)">✕ Свернуть</div></div></div>
+<div class="card"><div class="icon">💪</div><h3>Как не бояться отказа</h3><div class="preview">Отказы — это нормально. Каждый раз ты становишься сильнее.</div><div class="expand"><p>Отказ — это не «ты плохой», а «не подошёл сейчас».</p><ul><li>Отказ — не провал, а опыт</li><li>Продолжай пытаться</li><li>Каждый раз ты ближе к цели</li></ul><div class="btn-close" onclick="closeCard(this)">✕ Свернуть</div></div></div>
+<div class="card"><div class="icon">🎯</div><h3>Первые шаги</h3><div class="preview">Начни с малого: помоги соседям, предложи свои услуги.</div><div class="expand"><p>Иногда самый сложный шаг — начать.</p><ul><li>Сделай пост в соцсетях</li><li>Предложи услуги во дворе</li><li>Спроси у старших знакомых</li></ul><div class="btn-close" onclick="closeCard(this)">✕ Свернуть</div></div></div>
+<div class="card"><div class="icon">🔥</div><h3>Твоя идея — твой старт</h3><div class="preview">Придумай что-то своё: выгул собак, полив цветов, доставка.</div><div class="expand"><p>У тебя есть уникальная идея?</p><ul><li>Придумай своё дело</li><li>Спроси родителей о поддержке</li><li>Попробуй — это интересно!</li></ul><div class="btn-close" onclick="closeCard(this)">✕ Свернуть</div></div></div>
+<div class="card"><div class="icon">🤝</div><h3>Помощь другим — хороший старт</h3><div class="preview">Помогай пожилым людям, присматривай за детьми, ухаживай за растениями.</div><div class="expand"><p>Многие люди ищут помощь по дому.</p><ul><li>Помоги соседям с покупками</li><li>Предложи присмотреть за животными</li><li>Ухаживай за садом или огородом</li></ul><div class="btn-close" onclick="closeCard(this)">✕ Свернуть</div></div></div>
+<div class="card"><div class="icon">🧘</div><h3>Не бойся просить помощи</h3><div class="preview">Родители, учителя, старшие друзья — они могут помочь.</div><div class="expand"><p>Ты не обязан делать всё один.</p><ul><li>Поговори с родителями</li><li>Спроси учителей</li><li>Обратись к старшим друзьям</li></ul><div class="btn-close" onclick="closeCard(this)">✕ Свернуть</div></div></div>
+<div class="card"><div class="icon">🚫</div><h3>Чего НЕ делать в резюме</h3><div class="preview">Ошибки, которые могут испортить первое впечатление.</div><div class="expand"><p>Не ври о своих навыках.</p><ul><li>Не пиши: «Я ничего не умею»</li><li>Не используй шаблоны из интернета</li><li>Не указывай ложные контакты</li></ul><div class="btn-close" onclick="closeCard(this)">✕ Свернуть</div></div></div>
+<div class="card"><div class="icon">✏️</div><h3>Как сделать резюме интересным</h3><div class="preview">Добавь немного изюминки, чтобы тебя заметили.</div><div class="expand"><p>Расскажи о своих увлечениях.</p><ul><li>Добавь фразу: «Люблю узнавать новое»</li><li>Напиши о своих достижениях</li><li>Используй яркие, но честные слова</li></ul><div class="btn-close" onclick="closeCard(this)">✕ Свернуть</div></div></div>
+<div class="card"><div class="icon">⏳</div><h3>Что делать, если никто не отвечает</h3><div class="preview">Не сдавайся — есть способы повысить свои шансы.</div><div class="expand"><p>Попробуй изменить подход.</p><ul><li>Проверь, правильно ли ты написал контакты</li><li>Спроси у родителей, как улучшить текст</li><li>Не останавливайся после первых отказов</li></ul><div class="btn-close" onclick="closeCard(this)">✕ Свернуть</div></div></div>
+</div>
+<button class="inspire-btn" onclick="showInspire()">✨ Получить вдохновение</button>
+<div class="inspire-text" id="inspireText"></div>
+<button class="clicker-btn" onclick="showClicker()">🖱️ КЛИКЕР ДАНИ</button>
+<div class="qr-section">
+<h3>📱 Пройди тест на работу</h3>
+<img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=https://n14660540-spec.github.io/my-site/test.html" alt="QR-код на тест">
+<p>Сканируй и узнай, готов ли ты к первой работе!</p>
+</div>
+<div class="footer">🌟 <strong>Найти работу легко</strong> — ты можешь начать уже сегодня!<br>Сделано с ❤️ для подростков, которые не боятся пробовать.</div>
+</div>
+<div class="page" id="clickerPage">
+<div class="clicker-page">
+<h1>🖱️ Кликер Дани</h1>
+<div class="balance">💰 Монетки: <span id="coinBalance">0</span></div>
+<div class="click-wrapper"><img src="photo_2026-08-04_20-50-00.jpg" alt="Тапай меня" class="click-image" id="clickImage"></div>
+<div class="click-counter">👆 Нажми на картинку, чтобы заработать монетки</div>
+<div class="back-btn" onclick="showMain()">← Вернуться к советам</div>
+</div>
+<div class="footer">🌟 <strong>Кликер Дани</strong> — тапай и собирай монетки!</div>
+</div>
+</div>
+<script>
+const starsContainer = document.getElementById('stars');
+for (let i = 0; i < 120; i++) {
+const star = document.createElement('div');
+star.className = 'star';
+star.style.left = Math.random() * 100 + '%';
+star.style.top = Math.random() * 100 + '%';
+star.style.animationDelay = Math.random() * 3 + 's';
+const size = 1 + Math.random() * 3;
+star.style.width = size + 'px';
+star.style.height = size + 'px';
+starsContainer.appendChild(star);
+}
+const container = document.getElementById('wordContainer');
+const words = [
+{ text: 'Найти', color: '#ffd700', delay: 0.2 },
+{ text: 'работу', color: '#ffd700', delay: 0.8 },
+{ text: 'легко', color: '#ff6b6b', delay: 1.4 },
+];
+words.forEach((w) => {
+const el = document.createElement('div');
+el.className = 'falling-word';
+el.textContent = w.text;
+el.style.color = w.color;
+el.style.animationDelay = w.delay + 's';
+el.style.left = (20 + Math.random() * 60) + '%';
+el.style.top = '-5%';
+container.appendChild(el);
+});
+setTimeout(() => {
+document.querySelectorAll('.falling-word').forEach(el => el.remove());
+const line = document.createElement('div');
+line.className = 'slogan-line';
+const wordData = [
+{ text: 'Найти', color: '#ffd700' },
+{ text: 'работу', color: '#ffd700' },
+{ text: 'легко', color: '#ff6b6b', extra: 'easy' },
+];
+wordData.forEach((w) => {
+const span = document.createElement('span');
+span.className = 'static-word' + (w.extra ? ' ' + w.extra : '');
+span.textContent = w.text;
+span.style.color = w.color;
+line.appendChild(span);
+});
+container.appendChild(line);
+document.getElementById('subText').textContent = '✨ Даже если тебе 11–13 лет ✨';
+}, 3000);
+document.querySelectorAll('.card').forEach(card => {
+card.addEventListener('click', function(e) {
+if (e.target.classList.contains('btn-close')) return;
+const isActive = this.classList.contains('active');
+document.querySelectorAll('.card').forEach(c => c.classList.remove('active'));
+if (!isActive) {
+this.classList.add('active');
+}
+});
+});
+function closeCard(btn) {
+const card = btn.closest('.card');
+if (card) card.classList.remove('active');
+}
+function showInspire() {
+const texts = [
+'🚀 Ты можешь больше, чем думаешь! Начни с малого — и ты удивишься.',
+'💪 Каждый отказ — это шаг к успеху. Ты уже на правильном пути!',
+'🌟 Твоя идея может изменить мир. А начать можно уже сегодня.',
+'🔥 Не бойся пробовать новое. Даже если не получится — ты узнаешь, как сделать лучше.',
+'🎯 У тебя есть всё, чтобы найти работу. Главное — верить в себя.',
+'✨ Ты уникален. Твои навыки и таланты нужны людям!',
+'💡 Иногда просто сказать "я могу" — это уже половина успеха.'
+];
+const random = texts[Math.floor(Math.random() * texts.length)];
+document.getElementById('inspireText').textContent = random;
+}
+function showClicker() {
+document.getElementById('mainPage').classList.remove('active');
+document.getElementById('clickerPage').classList.add('active');
+}
+function showMain() {
+document.getElementById('clickerPage').classList.remove('active');
+document.getElementById('mainPage').classList.add('active');
+}
+let coins = 0;
+const coinBalance = document.getElementById('coinBalance');
+const clickImage = document.getElementById('clickImage');
+clickImage.addEventListener('click', function(e) {
+coins++;
+coinBalance.textContent = coins;
+this.style.transform = 'scale(0.88)';
+setTimeout(() => { this.style.transform = 'scale(1)'; }, 120);
+const popup = document.createElement('div');
+popup.className = 'coin-popup';
+popup.textContent = '+1 🪙';
+const offsetX = -30 + Math.random() * 70;
+const offsetY = -80 + Math.random() * 30;
+const offsetX2 = -50 + Math.random() * 100;
+const offsetY2 = -150 + Math.random() * 40;
+popup.style.setProperty('--fx', offsetX + 'px');
+popup.style.setProperty('--fy', offsetY + 'px');
+popup.style.setProperty('--fx2', offsetX2 + 'px');
+popup.style.setProperty('--fy2', offsetY2 + 'px');
+const rect = this.getBoundingClientRect();
+popup.style.left = (rect.left + rect.width / 2 - 20) + 'px';
+popup.style.top = (rect.top - 10) + 'px';
+popup.style.position = 'fixed';
+document.body.appendChild(popup);
+setTimeout(() => { popup.remove(); }, 900);
+});
+</script>
 </body>
 </html>
