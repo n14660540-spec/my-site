@@ -5,113 +5,217 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Тест: Найди работу легко!</title>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', system-ui, sans-serif; }
-        body { background: linear-gradient(145deg, #0f0c29, #302b63, #24243e); min-height: 100vh; color: #fff; padding: 20px; }
-        .container { max-width: 800px; margin: 0 auto; background: rgba(255,255,255,0.05); border-radius: 30px; padding: 30px; backdrop-filter: blur(6px); border: 1px solid rgba(255,255,255,0.06); }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', system-ui, sans-serif;
+        }
+        body {
+            background: linear-gradient(145deg, #0f0c29, #302b63, #24243e);
+            min-height: 100vh;
+            color: #fff;
+            padding: 20px;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 30px;
+            padding: 30px;
+            backdrop-filter: blur(6px);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+        }
         h1 { text-align: center; font-size: 32px; color: #ffd700; margin-bottom: 8px; }
         .subtitle { text-align: center; color: #aaa; margin-bottom: 24px; }
-        .question-block { background: rgba(255,255,255,0.04); border-radius: 20px; padding: 18px 20px; margin-bottom: 16px; border-left: 4px solid #ffd700; }
+        .question-block {
+            background: rgba(255, 255, 255, 0.04);
+            border-radius: 20px;
+            padding: 18px 20px;
+            margin-bottom: 16px;
+            border-left: 4px solid #ffd700;
+        }
         .question-block .q { font-weight: 600; font-size: 17px; margin-bottom: 10px; color: #fff; }
-        .options label { display: block; padding: 8px 14px; margin-bottom: 6px; background: rgba(255,255,255,0.05); border-radius: 12px; cursor: pointer; transition: 0.2s; border: 1px solid transparent; font-size: 15px; }
-        .options label:hover { background: rgba(255,215,0,0.08); }
+        .options label {
+            display: block;
+            padding: 8px 14px;
+            margin-bottom: 6px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            cursor: pointer;
+            transition: 0.2s;
+            border: 1px solid transparent;
+            font-size: 15px;
+        }
+        .options label:hover { background: rgba(255, 215, 0, 0.08); }
         .options input[type="radio"] { margin-right: 10px; accent-color: #ffd700; transform: scale(1.1); }
-        .options label.selected { border-color: #ffd700; background: rgba(255,215,0,0.12); }
-        .result-box { text-align: center; margin-top: 25px; padding: 20px; border-radius: 20px; background: rgba(255,215,0,0.06); border: 1px solid rgba(255,215,0,0.15); }
+        .options label.selected { border-color: #ffd700; background: rgba(255, 215, 0, 0.12); }
+        .result-box {
+            text-align: center;
+            margin-top: 25px;
+            padding: 20px;
+            border-radius: 20px;
+            background: rgba(255, 215, 0, 0.06);
+            border: 1px solid rgba(255, 215, 0, 0.15);
+        }
         .result-box .score { font-size: 48px; font-weight: 900; color: #ffd700; }
         .result-box .label { font-size: 22px; font-weight: bold; margin-top: 6px; }
         .result-box .desc { color: #bbb; margin-top: 10px; font-size: 16px; line-height: 1.6; }
-        .btn { display: inline-block; margin-top: 16px; padding: 12px 32px; background: linear-gradient(145deg, #ffd700, #f0a500); border: none; border-radius: 60px; color: #1a1a2e; font-weight: bold; font-size: 18px; cursor: pointer; transition: 0.3s; box-shadow: 0 8px 32px rgba(255,215,0,0.2); }
-        .btn:hover { transform: scale(1.03); box-shadow: 0 12px 48px rgba(255,215,0,0.35); }
-        .btn-secondary { background: rgba(255,255,255,0.1); color: #fff; box-shadow: none; border: 1px solid rgba(255,255,255,0.1); }
-        .btn-secondary:hover { background: rgba(255,255,255,0.2); }
-        .footer { text-align: center; color: #666; font-size: 13px; margin-top: 30px; border-top: 1px solid rgba(255,255,255,0.04); padding-top: 20px; }
+        .btn {
+            display: inline-block;
+            margin-top: 16px;
+            padding: 12px 32px;
+            background: linear-gradient(145deg, #ffd700, #f0a500);
+            border: none;
+            border-radius: 60px;
+            color: #1a1a2e;
+            font-weight: bold;
+            font-size: 18px;
+            cursor: pointer;
+            transition: 0.3s;
+            box-shadow: 0 8px 32px rgba(255, 215, 0, 0.2);
+        }
+        .btn:hover { transform: scale(1.03); box-shadow: 0 12px 48px rgba(255, 215, 0, 0.35); }
+        .btn-secondary { background: rgba(255, 255, 255, 0.1); color: #fff; box-shadow: none; border: 1px solid rgba(255, 255, 255, 0.1); }
+        .btn-secondary:hover { background: rgba(255, 255, 255, 0.2); }
+        .btn-confirm {
+            background: linear-gradient(145deg, #00c853, #00a844);
+            color: #fff;
+            box-shadow: 0 8px 32px rgba(0, 200, 80, 0.2);
+        }
+        .btn-confirm:hover { box-shadow: 0 12px 48px rgba(0, 200, 80, 0.35); }
+        .btn-confirm:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
+        .footer { text-align: center; color: #666; font-size: 13px; margin-top: 30px; border-top: 1px solid rgba(255, 255, 255, 0.04); padding-top: 20px; }
         .hidden { display: none; }
-        @media (max-width:600px) { .container { padding: 16px; } h1 { font-size: 26px; } }
+        @media (max-width: 600px) { .container { padding: 16px; } h1 { font-size: 26px; } }
     </style>
 </head>
 <body>
-<div class="container">
-    <h1>📋 Тест: «Найди работу легко»</h1>
-    <div class="subtitle">Ответь на 10 вопросов и узнай, готов ли ты к поиску работы</div>
-    <div id="quizContainer"></div>
-    <div id="resultBox" class="result-box hidden">
-        <div class="score" id="scoreDisplay">0</div>
-        <div class="label" id="labelDisplay">—</div>
-        <div class="desc" id="descDisplay"></div>
-        <button class="btn" onclick="resetQuiz()">🔄 Пройти заново</button>
-        <br>
-        <button class="btn btn-secondary" onclick="window.location.href='index.html'">🏠 На главную</button>
+    <div class="container">
+        <h1>📋 Тест: «Найди работу легко»</h1>
+        <div class="subtitle">Ответь на 10 вопросов и узнай, готов ли ты к поиску работы</div>
+
+        <div id="quizContainer"></div>
+
+        <div style="text-align:center; margin-top:20px;">
+            <button class="btn btn-confirm" id="confirmBtn" disabled onclick="calculateResult()">✅ Подтвердить ответы</button>
+        </div>
+
+        <div id="resultBox" class="result-box hidden">
+            <div class="score" id="scoreDisplay">0</div>
+            <div class="label" id="labelDisplay">—</div>
+            <div class="desc" id="descDisplay"></div>
+            <button class="btn" onclick="resetQuiz()">🔄 Пройти заново</button>
+            <br>
+            <button class="btn btn-secondary" onclick="window.location.href='index.html'">🏠 На главную</button>
+        </div>
+
+        <div class="footer">
+            🌟 <strong>Найти работу легко</strong> — даже если тебе 11–13 лет
+        </div>
     </div>
-    <div class="footer">🌟 <strong>Найти работу легко</strong> — даже если тебе 11–13 лет</div>
-</div>
-<script>
-const questions = [
-{q: 'Что лучше всего написать в теме письма работодателю на Авито?', options: ['А) «Вакансия, отклик»', 'Б) «Ищу работу, срочно!»', 'В) «Курьер в ваш район, готов сегодня»'], scores: [1,0,2]},
-{q: 'Какую зарплату указать в графе «Пожелания по оплате» новичку без опыта?', options: ['А) 100 000 рублей', 'Б) «По договоренности»', 'В) Минималку'], scores: [0,2,1]},
-{q: 'Что написать в разделе «О себе», чтобы выделиться из 100 откликов?', options: ['А) «Коммуникабельный, стрессоустойчивый, ответственный»', 'Б) «Не опаздываю, не курю, не зависаю в телефоне»', 'В) «Люблю животных и слушать музыку»'], scores: [1,2,0]},
-{q: 'У вас нет опыта работы. Что вы напишете в блоке «Опыт»?', options: ['А) Оставлю поле пустым', 'Б) Напишу: «Помогал в школьной ярмарке, разгружал товар»', 'В) Придумаю стажировку в компании, где не работал'], scores: [0,2,0]},
-{q: 'Какое фото лучше всего поставить в резюме?', options: ['А) Селфи в темной комнате с наушниками', 'Б) Качественное фото на нейтральном фоне в опрятной футболке/рубашке', 'В) Вообще без фото'], scores: [0,2,1]},
-{q: 'Вы нашли вакансию курьера. Что вы напишете в сопроводительном сообщении?', options: ['А) «Здравствуйте, возьмете меня?»', 'Б) «Я живу за углом от вашего офиса, могу приехать на собеседование через 10 минут»', 'В) Расскажу историю своей жизни и почему я хочу работать'], scores: [0,2,0]},
-{q: 'Работодатель сказал: «Ты слишком молодой». Ваш ответ?', options: ['А) Растеряюсь и скажу «Извините»', 'Б) Скажу: «Я понимаю, но я быстро учусь, и мне не нужен перерыв на обед по ТК»', 'В) Скажу, что у меня есть разрешение от родителей'], scores: [0,2,1]},
-{q: 'Что из перечисленного НЕЛЬЗЯ писать в резюме подростку?', options: ['А) Знание ПК и офисных программ', 'Б) Оценки в школьном аттестате (троек/пятерок)', 'В) Контактный номер телефона мамы'], scores: [2,0,1]},
-{q: 'Вы опоздали на собеседование на 5 минут. Ваши действия?', options: ['А) Промолчать, надеясь, что не заметят', 'Б) Извиниться и предложить перенести, если им неудобно', 'В) Сказать, что виноваты пробки'], scores: [0,2,1]},
-{q: 'Вам предлагают «черную зарплату» в конверте. Ваше решение?', options: ['А) Согласиться, так как деньги нужны срочно', 'Б) Уточнить: «А можем официально? Я хочу иметь стаж в трудовой»', 'В) Сразу отказаться и уйти'], scores: [0,2,1]}
-];
-let userScores = [];
-function renderQuiz() {
-    const container = document.getElementById('quizContainer');
-    container.innerHTML = '';
-    questions.forEach((q, idx) => {
-        const block = document.createElement('div');
-        block.className = 'question-block';
-        block.innerHTML = `<div class="q">${idx+1}. ${q.q}</div><div class="options">`;
-        q.options.forEach((opt, oi) => {
-            block.innerHTML += `<label><input type="radio" name="q${idx}" value="${oi}" data-idx="${idx}" data-score="${q.scores[oi]}"> ${opt}</label>`;
-        });
-        block.innerHTML += '</div>';
-        container.appendChild(block);
-    });
-    document.querySelectorAll('input[type="radio"]').forEach(el => {
-        el.addEventListener('change', function() {
-            const parent = this.closest('.options');
-            parent.querySelectorAll('label').forEach(l => l.classList.remove('selected'));
-            this.closest('label').classList.add('selected');
-            checkComplete();
-        });
-    });
-}
-function checkComplete() {
-    const all = document.querySelectorAll('.question-block');
-    let answered = 0;
-    all.forEach((block, idx) => {
-        const checked = block.querySelector(`input[name="q${idx}"]:checked`);
-        if (checked) answered++;
-    });
-    if (answered === questions.length) calculateResult();
-}
-function calculateResult() {
-    let total = 0;
-    questions.forEach((q, idx) => {
-        const checked = document.querySelector(`input[name="q${idx}"]:checked`);
-        if (checked) total += parseInt(checked.dataset.score);
-    });
-    document.getElementById('scoreDisplay').textContent = total;
-    let label = '', desc = '';
-    if (total >= 18) { label = '🏆 Золотой кандидат'; desc = 'Ваше резюме в топе! Вы понимаете психологию работодателя. Смело рассылайте отклики — вас позовут в первую очередь.'; }
-    else if (total >= 12) { label = '🥈 Серебряный кандидат'; desc = 'Вы на правильном пути, но есть слабые места. Перечитайте вопросы, где выбрали ответы на 0–1 балл — это ваши точки роста.'; }
-    else { label = '📘 Стажер-новичок'; desc = 'Не расстраивайтесь! Вы пока мыслите как школьник, а не как сотрудник. Запомните золотое правило: работодателю важны не ВЫ, а ВАШЕ УДОБСТВО и ОТСУТСТВИЕ ПРОБЛЕМ.'; }
-    document.getElementById('labelDisplay').textContent = label;
-    document.getElementById('descDisplay').textContent = desc;
-    document.getElementById('quizContainer').classList.add('hidden');
-    document.getElementById('resultBox').classList.remove('hidden');
-}
-function resetQuiz() {
-    document.getElementById('quizContainer').classList.remove('hidden');
-    document.getElementById('resultBox').classList.add('hidden');
-    document.querySelectorAll('input[type="radio"]').forEach(el => { el.checked = false; el.closest('label').classList.remove('selected'); });
-    renderQuiz();
-}
-renderQuiz();
-</script>
+
+    <script>
+        const questions = [
+            { q: 'Что лучше всего написать в теме письма работодателю на Авито?', options: ['А) «Вакансия, отклик»', 'Б) «Ищу работу, срочно!»', 'В) «Курьер в ваш район, готов сегодня»'], scores: [1, 0, 2] },
+            { q: 'Какую зарплату указать в графе «Пожелания по оплате» новичку без опыта?', options: ['А) 100 000 рублей', 'Б) «По договоренности»', 'В) Минималку'], scores: [0, 2, 1] },
+            { q: 'Что написать в разделе «О себе», чтобы выделиться из 100 откликов?', options: ['А) «Коммуникабельный, стрессоустойчивый, ответственный»', 'Б) «Не опаздываю, не курю, не зависаю в телефоне»', 'В) «Люблю животных и слушать музыку»'], scores: [1, 2, 0] },
+            { q: 'У вас нет опыта работы. Что вы напишете в блоке «Опыт»?', options: ['А) Оставлю поле пустым', 'Б) Напишу: «Помогал в школьной ярмарке, разгружал товар»', 'В) Придумаю стажировку в компании, где не работал'], scores: [0, 2, 0] },
+            { q: 'Какое фото лучше всего поставить в резюме?', options: ['А) Селфи в темной комнате с наушниками', 'Б) Качественное фото на нейтральном фоне в опрятной футболке/рубашке', 'В) Вообще без фото'], scores: [0, 2, 1] },
+            { q: 'Вы нашли вакансию курьера. Что вы напишете в сопроводительном сообщении?', options: ['А) «Здравствуйте, возьмете меня?»', 'Б) «Я живу за углом от вашего офиса, могу приехать на собеседование через 10 минут»', 'В) Расскажу историю своей жизни и почему я хочу работать'], scores: [0, 2, 0] },
+            { q: 'Работодатель сказал: «Ты слишком молодой». Ваш ответ?', options: ['А) Растеряюсь и скажу «Извините»', 'Б) Скажу: «Я понимаю, но я быстро учусь, и мне не нужен перерыв на обед по ТК»', 'В) Скажу, что у меня есть разрешение от родителей'], scores: [0, 2, 1] },
+            { q: 'Что из перечисленного НЕЛЬЗЯ писать в резюме подростку?', options: ['А) Знание ПК и офисных программ', 'Б) Оценки в школьном аттестате (троек/пятерок)', 'В) Контактный номер телефона мамы'], scores: [2, 0, 1] },
+            { q: 'Вы опоздали на собеседование на 5 минут. Ваши действия?', options: ['А) Промолчать, надеясь, что не заметят', 'Б) Извиниться и предложить перенести, если им неудобно', 'В) Сказать, что виноваты пробки'], scores: [0, 2, 1] },
+            { q: 'Вам предлагают «черную зарплату» в конверте. Ваше решение?', options: ['А) Согласиться, так как деньги нужны срочно', 'Б) Уточнить: «А можем официально? Я хочу иметь стаж в трудовой»', 'В) Сразу отказаться и уйти'], scores: [0, 2, 1] }
+        ];
+
+        function renderQuiz() {
+            const container = document.getElementById('quizContainer');
+            container.innerHTML = '';
+            questions.forEach((q, idx) => {
+                const block = document.createElement('div');
+                block.className = 'question-block';
+                block.innerHTML = `<div class="q">${idx + 1}. ${q.q}</div><div class="options">`;
+                q.options.forEach((opt, oi) => {
+                    block.innerHTML += `
+                        <label>
+                            <input type="radio" name="q${idx}" value="${oi}" data-score="${q.scores[oi]}">
+                            ${opt}
+                        </label>
+                    `;
+                });
+                block.innerHTML += '</div>';
+                container.appendChild(block);
+            });
+
+            document.querySelectorAll('input[type="radio"]').forEach(el => {
+                el.addEventListener('change', function() {
+                    const parent = this.closest('.options');
+                    parent.querySelectorAll('label').forEach(l => l.classList.remove('selected'));
+                    this.closest('label').classList.add('selected');
+                    updateConfirmButton();
+                });
+            });
+
+            updateConfirmButton();
+        }
+
+        function updateConfirmButton() {
+            const allQuestions = document.querySelectorAll('.question-block');
+            let answered = 0;
+            allQuestions.forEach((block, idx) => {
+                const checked = block.querySelector(`input[name="q${idx}"]:checked`);
+                if (checked) answered++;
+            });
+            const confirmBtn = document.getElementById('confirmBtn');
+            if (answered === questions.length) {
+                confirmBtn.disabled = false;
+            } else {
+                confirmBtn.disabled = true;
+            }
+        }
+
+        function calculateResult() {
+            let total = 0;
+            questions.forEach((q, idx) => {
+                const checked = document.querySelector(`input[name="q${idx}"]:checked`);
+                if (checked) {
+                    total += parseInt(checked.dataset.score);
+                }
+            });
+
+            document.getElementById('scoreDisplay').textContent = total;
+            let label = '', desc = '';
+            if (total >= 18) {
+                label = '🏆 Золотой кандидат';
+                desc = 'Ваше резюме в топе! Вы понимаете психологию работодателя. Смело рассылайте отклики — вас позовут в первую очередь.';
+            } else if (total >= 12) {
+                label = '🥈 Серебряный кандидат';
+                desc = 'Вы на правильном пути, но есть слабые места. Перечитайте вопросы, где выбрали ответы на 0–1 балл — это ваши точки роста.';
+            } else {
+                label = '📘 Стажер-новичок';
+                desc = 'Не расстраивайтесь! Вы пока мыслите как школьник, а не как сотрудник. Запомните золотое правило: работодателю важны не ВЫ, а ВАШЕ УДОБСТВО и ОТСУТСТВИЕ ПРОБЛЕМ.';
+            }
+            document.getElementById('labelDisplay').textContent = label;
+            document.getElementById('descDisplay').textContent = desc;
+            document.getElementById('quizContainer').classList.add('hidden');
+            document.getElementById('confirmBtn').classList.add('hidden');
+            document.getElementById('resultBox').classList.remove('hidden');
+        }
+
+        function resetQuiz() {
+            document.getElementById('quizContainer').classList.remove('hidden');
+            document.getElementById('resultBox').classList.add('hidden');
+            document.getElementById('confirmBtn').classList.remove('hidden');
+            document.getElementById('confirmBtn').disabled = true;
+            document.querySelectorAll('input[type="radio"]').forEach(el => {
+                el.checked = false;
+                el.closest('label').classList.remove('selected');
+            });
+            renderQuiz();
+        }
+
+        renderQuiz();
+    </script>
 </body>
 </html>
