@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Тест: Найди работу легко!</title>
 
-    <!-- Firebase SDK (совместимая версия) -->
+    <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
 
@@ -209,6 +209,99 @@
             color: #cd7f32;
             font-weight: bold;
         }
+
+        .review-block {
+            background: rgba(255, 255, 255, 0.04);
+            border-radius: 16px;
+            padding: 16px 20px;
+            margin: 12px 0;
+            border-left: 4px solid #ffd700;
+        }
+        .review-block .q {
+            font-weight: 600;
+            font-size: 16px;
+        }
+        .review-block .answer {
+            margin-top: 6px;
+            font-size: 15px;
+        }
+        .review-block .correct {
+            color: #4caf50;
+        }
+        .review-block .wrong {
+            color: #ff6b6b;
+        }
+        .review-block .explain {
+            color: #aaa;
+            font-size: 14px;
+            margin-top: 4px;
+        }
+
+        /* ===== ПЛЕЕР МЕЛСТРОЯ ===== */
+        .melnik-player {
+            position: fixed;
+            bottom: 30px;
+            left: 30px;
+            z-index: 999;
+            background: rgba(20, 20, 40, 0.85);
+            backdrop-filter: blur(8px);
+            border-radius: 50px;
+            padding: 10px 18px 10px 20px;
+            display: none;
+            align-items: center;
+            gap: 12px;
+            border: 1px solid rgba(255, 215, 0, 0.2);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+            transition: 0.3s;
+        }
+        .melnik-player.active {
+            display: flex;
+        }
+        .melnik-player .label {
+            color: #ffd700;
+            font-size: 14px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+        .melnik-player .btn-play {
+            background: rgba(255, 215, 0, 0.15);
+            border: 1px solid rgba(255, 215, 0, 0.2);
+            border-radius: 30px;
+            color: #fff;
+            padding: 6px 14px;
+            font-size: 13px;
+            cursor: pointer;
+            transition: 0.2s;
+            font-weight: 500;
+        }
+        .melnik-player .btn-play:hover {
+            background: rgba(255, 215, 0, 0.25);
+        }
+        .melnik-player .btn-play.playing {
+            background: rgba(255, 107, 107, 0.2);
+            border-color: #ff6b6b;
+        }
+        .melnik-player .volume-slider {
+            width: 60px;
+            accent-color: #ffd700;
+            cursor: pointer;
+        }
+        @media (max-width: 600px) {
+            .melnik-player {
+                bottom: 16px;
+                left: 16px;
+                padding: 8px 14px;
+                flex-wrap: wrap;
+                gap: 6px;
+            }
+            .melnik-player .label {
+                font-size: 12px;
+            }
+            .melnik-player .volume-slider {
+                width: 40px;
+            }
+        }
+
         @media (max-width: 600px) {
             .container { padding: 16px; }
             h1 { font-size: 26px; }
@@ -241,6 +334,7 @@
             <div class="score" id="scoreDisplay">0</div>
             <div class="label" id="labelDisplay">—</div>
             <div class="desc" id="descDisplay"></div>
+            <div id="reviewContainer" style="text-align:left; margin-top:20px;"></div>
             <button class="btn" onclick="resetQuiz()">🔄 Пройти заново</button>
             <br>
             <button class="btn btn-secondary" onclick="showResults()">📊 Посмотреть результаты всех</button>
@@ -260,9 +354,20 @@
         </div>
     </div>
 
+    <!-- ===== ПЛЕЕР МЕЛСТРОЯ ===== -->
+    <div class="melnik-player" id="melnikPlayer">
+        <span class="label">🎵 Меллстрой</span>
+        <button class="btn-play" id="playBtn">▶️ Включить</button>
+        <input type="range" class="volume-slider" id="volumeSlider" min="0" max="100" value="50">
+        <audio id="melnikAudio" loop preload="auto">
+            <source src="melnik.mp3" type="audio/mpeg">
+            Ваш браузер не поддерживает аудио.
+        </audio>
+    </div>
+
     <script>
         // ============================================================
-        //  🔥 ТВОИ НАСТРОЙКИ FIREBASE (уже вставлены)
+        //  FIREBASE
         // ============================================================
         const firebaseConfig = {
             apiKey: "AIzaSyBOvMRic7O8ArU0FA80WtjcyjjmAN9webg",
@@ -274,7 +379,6 @@
             measurementId: "G-XVTN0DM7NB"
         };
 
-        // Инициализация Firebase
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
 
@@ -282,19 +386,73 @@
         //  ВОПРОСЫ
         // ============================================================
         const questions = [
-            { q: 'Что лучше всего написать в теме письма работодателю на Авито?', options: ['А) «Вакансия, отклик»', 'Б) «Ищу работу, срочно!»', 'В) «Курьер в ваш район, готов сегодня»'], scores: [1, 0, 2] },
-            { q: 'Какую зарплату указать в графе «Пожелания по оплате» новичку без опыта?', options: ['А) 100 000 рублей', 'Б) «По договоренности»', 'В) Минималку'], scores: [0, 2, 1] },
-            { q: 'Что написать в разделе «О себе», чтобы выделиться из 100 откликов?', options: ['А) «Коммуникабельный, стрессоустойчивый, ответственный»', 'Б) «Не опаздываю, не курю, не зависаю в телефоне»', 'В) «Люблю животных и слушать музыку»'], scores: [1, 2, 0] },
-            { q: 'У вас нет опыта работы. Что вы напишете в блоке «Опыт»?', options: ['А) Оставлю поле пустым', 'Б) Напишу: «Помогал в школьной ярмарке, разгружал товар»', 'В) Придумаю стажировку в компании, где не работал'], scores: [0, 2, 0] },
-            { q: 'Какое фото лучше всего поставить в резюме?', options: ['А) Селфи в темной комнате с наушниками', 'Б) Качественное фото на нейтральном фоне в опрятной футболке/рубашке', 'В) Вообще без фото'], scores: [0, 2, 1] },
-            { q: 'Вы нашли вакансию курьера. Что вы напишете в сопроводительном сообщении?', options: ['А) «Здравствуйте, возьмете меня?»', 'Б) «Я живу за углом от вашего офиса, могу приехать на собеседование через 10 минут»', 'В) Расскажу историю своей жизни и почему я хочу работать'], scores: [0, 2, 0] },
-            { q: 'Работодатель сказал: «Ты слишком молодой». Ваш ответ?', options: ['А) Растеряюсь и скажу «Извините»', 'Б) Скажу: «Я понимаю, но я быстро учусь, и мне не нужен перерыв на обед по ТК»', 'В) Скажу, что у меня есть разрешение от родителей'], scores: [0, 2, 1] },
-            { q: 'Что из перечисленного НЕЛЬЗЯ писать в резюме подростку?', options: ['А) Знание ПК и офисных программ', 'Б) Оценки в школьном аттестате (троек/пятерок)', 'В) Контактный номер телефона мамы'], scores: [2, 0, 1] },
-            { q: 'Вы опоздали на собеседование на 5 минут. Ваши действия?', options: ['А) Промолчать, надеясь, что не заметят', 'Б) Извиниться и предложить перенести, если им неудобно', 'В) Сказать, что виноваты пробки'], scores: [0, 2, 1] },
-            { q: 'Вам предлагают «черную зарплату» в конверте. Ваше решение?', options: ['А) Согласиться, так как деньги нужны срочно', 'Б) Уточнить: «А можем официально? Я хочу иметь стаж в трудовой»', 'В) Сразу отказаться и уйти'], scores: [0, 2, 1] }
+            { q: 'Что лучше всего написать в теме письма работодателю на Авито?', options: ['А) «Вакансия, отклик»', 'Б) «Ищу работу, срочно!»', 'В) «Курьер в ваш район, готов сегодня»'], scores: [1, 0, 2], correct: 2, explain: 'Работодателю важна конкретика. «Курьер в ваш район, готов сегодня» показывает, что вы уже изучили вакансию и готовы действовать.' },
+            { q: 'Какую зарплату указать в графе «Пожелания по оплате» новичку без опыта?', options: ['А) 100 000 рублей', 'Б) «По договоренности»', 'В) Минималку'], scores: [0, 2, 1], correct: 1, explain: '«По договоренности» — лучший ответ, потому что вы не знаете рынок и не отпугиваете работодателя завышенными или заниженными требованиями.' },
+            { q: 'Что написать в разделе «О себе», чтобы выделиться из 100 откликов?', options: ['А) «Коммуникабельный, стрессоустойчивый, ответственный»', 'Б) «Не опаздываю, не курю, не зависаю в телефоне»', 'В) «Люблю животных и слушать музыку»'], scores: [1, 2, 0], correct: 1, explain: 'Конкретные обещания (не опаздываю, не курю) работают лучше общих шаблонных фраз. Работодатель видит, что вы думаете о его удобстве.' },
+            { q: 'У вас нет опыта работы. Что вы напишете в блоке «Опыт»?', options: ['А) Оставлю поле пустым', 'Б) Напишу: «Помогал в школьной ярмарке, разгружал товар»', 'В) Придумаю стажировку в компании, где не работал'], scores: [0, 2, 0], correct: 1, explain: 'Лучше честно написать о реальном, даже маленьком опыте, чем придумывать. Честность ценится выше.' },
+            { q: 'Какое фото лучше всего поставить в резюме?', options: ['А) Селфи в темной комнате с наушниками', 'Б) Качественное фото на нейтральном фоне в опрятной футболке/рубашке', 'В) Вообще без фото'], scores: [0, 2, 1], correct: 1, explain: 'Опрятное фото на нейтральном фоне — это признак уважения к работодателю. Оно создаёт первое впечатление о вас.' },
+            { q: 'Вы нашли вакансию курьера. Что вы напишете в сопроводительном сообщении?', options: ['А) «Здравствуйте, возьмете меня?»', 'Б) «Я живу за углом от вашего офиса, могу приехать на собеседование через 10 минут»', 'В) Расскажу историю своей жизни и почему я хочу работать'], scores: [0, 2, 0], correct: 1, explain: 'Работодатель ценит конкретику и готовность действовать. Ваше удобство для него — это плюс.' },
+            { q: 'Работодатель сказал: «Ты слишком молодой». Ваш ответ?', options: ['А) Растеряюсь и скажу «Извините»', 'Б) Скажу: «Я понимаю, но я быстро учусь, и мне не нужен перерыв на обед по ТК»', 'В) Скажу, что у меня есть разрешение от родителей'], scores: [0, 2, 1], correct: 1, explain: 'Вы не оправдываетесь, а переводите недостаток (молодость) в преимущество (быстро учусь, не трачу время на перекуры).' },
+            { q: 'Что из перечисленного НЕЛЬЗЯ писать в резюме подростку?', options: ['А) Знание ПК и офисных программ', 'Б) Оценки в школьном аттестате (троек/пятерок)', 'В) Контактный номер телефона мамы'], scores: [2, 0, 1], correct: 2, explain: 'Номер мамы — это не контакт соискателя. Работодатель должен звонить вам, а не родителям. Это выглядит несерьёзно.' },
+            { q: 'Вы опоздали на собеседование на 5 минут. Ваши действия?', options: ['А) Промолчать, надеясь, что не заметят', 'Б) Извиниться и предложить перенести, если им неудобно', 'В) Сказать, что виноваты пробки'], scores: [0, 2, 1], correct: 1, explain: 'Извиниться и предложить перенести — это зрелый шаг. Вы показываете уважение к чужому времени.' },
+            { q: 'Вам предлагают «черную зарплату» в конверте. Ваше решение?', options: ['А) Согласиться, так как деньги нужны срочно', 'Б) Уточнить: «А можем официально? Я хочу иметь стаж в трудовой»', 'В) Сразу отказаться и уйти'], scores: [0, 2, 1], correct: 1, explain: 'Лучше уточнить про официальное оформление. Это показывает, что вы думаете о будущем и не боитесь задавать вопросы.' }
         ];
 
         let currentUser = null;
+        let userAnswers = [];
+
+        // ============================================================
+        //  ПЛЕЕР МЕЛСТРОЯ (исправленный)
+        // ============================================================
+        const melnikPlayer = document.getElementById('melnikPlayer');
+        const audio = document.getElementById('melnikAudio');
+        const playBtn = document.getElementById('playBtn');
+        const volumeSlider = document.getElementById('volumeSlider');
+
+        let isPlaying = false;
+        let isPlayerReady = false;
+
+        // Проверяем, загрузился ли аудиофайл
+        audio.addEventListener('canplaythrough', () => {
+            isPlayerReady = true;
+            console.log('✅ Аудио загружено и готово к воспроизведению');
+        });
+
+        audio.addEventListener('error', (e) => {
+            console.error('❌ Ошибка загрузки аудио:', e);
+            alert('Не удалось загрузить аудиофайл. Проверьте, что файл melnik.mp3 лежит рядом с test.html.');
+        });
+
+        function showPlayer() {
+            melnikPlayer.classList.add('active');
+        }
+
+        playBtn.addEventListener('click', () => {
+            if (!isPlayerReady) {
+                alert('Аудио ещё не загружено. Попробуйте через секунду.');
+                return;
+            }
+
+            if (isPlaying) {
+                audio.pause();
+                playBtn.textContent = '▶️ Включить';
+                playBtn.classList.remove('playing');
+                isPlaying = false;
+            } else {
+                audio.play().then(() => {
+                    playBtn.textContent = '⏸️ Пауза';
+                    playBtn.classList.add('playing');
+                    isPlaying = true;
+                }).catch((error) => {
+                    console.error('Ошибка воспроизведения:', error);
+                    alert('Не удалось воспроизвести аудио. Попробуйте перезагрузить страницу.');
+                });
+            }
+        });
+
+        volumeSlider.addEventListener('input', () => {
+            audio.volume = volumeSlider.value / 100;
+        });
 
         // ============================================================
         //  РЕГИСТРАЦИЯ
@@ -309,6 +467,7 @@
             currentUser = { firstName, lastName };
             document.getElementById('registerBox').classList.add('hidden');
             document.getElementById('testContainer').classList.remove('hidden');
+            showPlayer();
             renderQuiz();
         }
 
@@ -344,16 +503,35 @@
         }
 
         // ============================================================
-        //  РЕЗУЛЬТАТ (С СОХРАНЕНИЕМ В FIREBASE)
+        //  РЕЗУЛЬТАТ
         // ============================================================
         async function calculateResult() {
             let total = 0;
             let answered = 0;
+            userAnswers = [];
+
             questions.forEach((q, idx) => {
                 const checked = document.querySelector(`input[name="q${idx}"]:checked`);
                 if (checked) {
                     answered++;
+                    const selected = parseInt(checked.value);
+                    const isCorrect = (selected === q.correct);
                     total += parseInt(checked.dataset.score);
+                    userAnswers.push({
+                        question: q.q,
+                        userAnswer: q.options[selected],
+                        correctAnswer: q.options[q.correct],
+                        isCorrect: isCorrect,
+                        explain: q.explain
+                    });
+                } else {
+                    userAnswers.push({
+                        question: q.q,
+                        userAnswer: 'Не выбран',
+                        correctAnswer: q.options[q.correct],
+                        isCorrect: false,
+                        explain: q.explain
+                    });
                 }
             });
 
@@ -374,7 +552,6 @@
                 desc = 'Не расстраивайтесь! Вы пока мыслите как школьник, а не как сотрудник. Запомните золотое правило: работодателю важны не ВЫ, а ВАШЕ УДОБСТВО и ОТСУТСТВИЕ ПРОБЛЕМ.';
             }
 
-            // Сохраняем в Firebase
             try {
                 await db.collection('results').add({
                     name: `${currentUser.firstName} ${currentUser.lastName}`,
@@ -385,21 +562,42 @@
                 console.log('✅ Результат сохранён в Firebase');
             } catch (e) {
                 console.error('❌ Ошибка сохранения:', e);
-                alert('Не удалось сохранить результат. Попробуйте позже.');
-                return;
             }
 
-            // Показываем результат
             document.getElementById('scoreDisplay').textContent = total;
             document.getElementById('labelDisplay').textContent = label;
             document.getElementById('descDisplay').textContent = desc;
+
+            const reviewContainer = document.getElementById('reviewContainer');
+            reviewContainer.innerHTML = '<h3 style="color:#ffd700; margin-bottom:12px;">📝 Разбор ответов</h3>';
+            userAnswers.forEach((item, idx) => {
+                const status = item.isCorrect ? '✅' : '❌';
+                const colorClass = item.isCorrect ? 'correct' : 'wrong';
+                const block = document.createElement('div');
+                block.className = 'review-block';
+                block.innerHTML = `
+                    <div class="q">${idx+1}. ${item.question}</div>
+                    <div class="answer">${status} <span class="${colorClass}">Ваш ответ: ${item.userAnswer}</span></div>
+                    <div class="answer correct">✅ Правильный ответ: ${item.correctAnswer}</div>
+                    <div class="explain">💡 Пояснение: ${item.explain}</div>
+                `;
+                reviewContainer.appendChild(block);
+            });
+
             document.getElementById('testContainer').classList.add('hidden');
             document.getElementById('confirmBtn').classList.add('hidden');
             document.getElementById('resultBox').classList.remove('hidden');
+
+            if (isPlaying) {
+                audio.pause();
+                playBtn.textContent = '▶️ Включить';
+                playBtn.classList.remove('playing');
+                isPlaying = false;
+            }
         }
 
         // ============================================================
-        //  ПОКАЗАТЬ РЕЗУЛЬТАТЫ ВСЕХ (ИЗ FIREBASE)
+        //  ПОКАЗАТЬ РЕЗУЛЬТАТЫ ВСЕХ
         // ============================================================
         async function showResults() {
             const container = document.getElementById('resultsTableContainer');
@@ -444,9 +642,6 @@
             document.getElementById('resultBox').classList.remove('hidden');
         }
 
-        // ============================================================
-        //  СБРОС
-        // ============================================================
         function resetQuiz() {
             document.getElementById('registerBox').classList.remove('hidden');
             document.getElementById('testContainer').classList.add('hidden');
@@ -459,6 +654,15 @@
                 el.closest('label').classList.remove('selected');
             });
             currentUser = null;
+            userAnswers = [];
+
+            melnikPlayer.classList.remove('active');
+            if (isPlaying) {
+                audio.pause();
+                playBtn.textContent = '▶️ Включить';
+                playBtn.classList.remove('playing');
+                isPlaying = false;
+            }
         }
     </script>
 </body>
